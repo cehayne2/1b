@@ -31,7 +31,8 @@ of the following right. 1 mark for getting 10/10
 
 1a. In LISP what is an association list?
 
-* It is a list of pairs of values.
+Answer: It is a list of pairs of values.
+Example: ((a . b)(b . c))
 
 1b. What does the function `assoc` do:
 
@@ -39,13 +40,16 @@ of the following right. 1 mark for getting 10/10
                   (r . x) (s . y) 
                   (r . z))) 
 
-* This does some form of table lookup.
+Answer: This finds the first value associated with r in the cons list.
+Return Value: (r . x)
 
 1c. What does the LISP 
 [mapcan](http://jtra.cz/stuff/lisp/sclr/mapcan.html)
 function do?  Gove am example of its use.
 
-*
+Answer: mapcan applies a function to elements in a list.  It's output is a string of the concatenated results.
+Example: (mapcan (lambda (x) (list (+ x 10))) '(1 2 3 4 5))
+Example Output: (11 12 13 14 15)
 
 1d. Give a small example of using LISP hash tables to (1) crete a
 hash table then (2) write something into that hash table then (3)
@@ -56,11 +60,13 @@ read that value back.
 1e What does the LISP "sublis" function do? Give
 an example.
 
-* sublis takes two arguments. Within one of the arguments, it replaces every instance of a certain value with another value.
+Answer: sublis takes two arguments. Within one of the arguments, it replaces every instance of a certain value with another value.
+Example: (sublis (mapcar (lambda (v) (cons v (gensym "?"))) (has-vars r)) r)
+Example Explanation: This exaple replaces every symbol mathing r with a generated unique symbol.
 
 1f. In Prolog, what is the role of the bindings variable "binds".
 
-* 
+Answer: binds represents facts that are known.
 
 1g. There seems to be a missing function. The examples shown below
 use an `(= ?x ?x)` rule but there is no support code anywhere else
@@ -68,7 +74,7 @@ for `=`. So how does `(= ?x ?x)` work?
 
 1h. What does "(gensym "?")" do?
 
-* gensym generates a unique symbol that is guaranteed to not already exist within the system.
+Answer: gensym generates a unique symbol that is guaranteed to not already exist within the system.
 
 1i. The following rules illustrates the need for variable renaming.
 Why is such renaming required? What could go wrong (with the 
@@ -78,7 +84,9 @@ rules.
      (<- (child ?x ?y) (parent ?y ?x))
      (<- (daughter ?y ?x) (and (child ?y ?x) (female ?y)))
 
-
+Answer: If you attempt to prove that ?y is a daughter of ?x, it would cause problems.
+        That is because ?y is the parent in the test for (child ?x ?y), but ?y is the
+        child in the test for (daughter ?y ?x).
 
 1j. (HARD) The code for "prove" that handles conjunctions seem wrong.  Why
 does the "and" clause in "prove" use "reverse"? Write a comment in
@@ -221,7 +229,7 @@ need to fix something inside `data0`.
           (unify (car x) (car y) binds)
           (and yes (unify (cdr x) (cdr y) b2)))))))
 
-;I was left confused by the description of this function. I don't know what it is for.
+
 (defun var? (x)
   (and (symbolp x) ;true if x is a symbol, nil if it isn't
        (eql (char (symbol-name x) 0) #\?)))
@@ -340,30 +348,9 @@ Otherwise, we return nil.  For example:
        (:?3062 . 1) (?X . :?3061))) ==> 1
 |#
 (defun knownHelper (x binds)
-  (let ((thing)) 
-    
-  )
 )
 
 (defun known (x binds) ;finds the meaning of x in binds. Can x have multiple meanings
-  
-  ; The following code block prints x and all of binds
-  #|( let ((ret))
-      (print "")
-      (print "--New Call (before)--")
-      (print x)
-      (dolist (y binds) (print y)) 
-   )
-  
-  (knownHelper x binds) ;calls the helper method to do things
-  
-  ; The following code block prints x and all of binds
-  ( let ((ret))
-      (print "--New Call (after)--")
-      (print x)
-      (dolist (y binds) (print y)) 
-      (print "")
-   )|#
 )
 
 #|
