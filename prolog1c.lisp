@@ -376,21 +376,26 @@ with "?" (see the "varp" function, below). Please implement:
 (Note that the order of the symbols in the output list does
 not matter. But there can be **no** repeats).
 |#
-(defun has-varsHelper (lst &optional vars)
-  (if (atom lst) ;if lst contains only one element
-    ; (if (vars lst)
-    (push lst vars);) ;pushes the lone symbol to vars
-    (dolist (x lst) ;for every x in lst
-      (has-varsHelper x vars)
+(defun has-varsHelper2 (x f)
+  "generic visitor"
+  (if (atom x)
+    (funcall f x)
+    (dolist (y x)
+      (has-varsHelper2 y f)
     )
   )
-  vars ;recurse into this function
 )
-
+(defun has-varsHelper1 (x p  &optional out )
+ "visit, collecting the result"
+ (has-varsHelper2 x (lambda (y)
+   (if (funcall p y)
+     (pushnew y out)
+   )
+ ))
+ out
+)
 (defun has-vars (lst)
-  ;(print "new call on lst:")
-  ;(print lst)
-  (remove-duplicates ( #|print (|#has-varsHelper lst));)
+  (has-varsHelper1 lst #'var?)
 )
 
 
