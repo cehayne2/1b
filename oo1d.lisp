@@ -172,7 +172,9 @@ and "datas-as-case" is missing... till you write it.
 1. Make defthing work
 
 TODO 1a. Why does mapcar call #'car over the "has"?
+    Data-as-case requires  the key for each pair. Calling car retrieves the key of each pair.
 TODO 1b. Why is message set to a gensym?
+    The counter increments as new messages are created and thus avoid any name clashes with new messages.
 TODO 1c. Implement "data-as-case": 
 
     (datas-as-case '(name balance interest-rate))
