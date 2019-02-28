@@ -79,14 +79,26 @@ that can create an "account".
 
     (defthing
       account
-      :has  ((name) (balance 0) (interest-rate .05))
-      :does ((withdraw (amt)
-                       (decf balance amt))
-             (deposit (amt)
-                      (incf balance amt))
-             (interest ()
+      :has  (
+                (name) (balance 0) (interest-rate .05)
+            )
+
+      :does (
+                (withdraw (amt)
+                       (decf balance amt)
+                )
+
+                (deposit (amt)
+                      (incf balance amt)
+                )
+
+                (interest ()
                        (incf balance
-                             (* interest-rate balance)))))
+                             (* interest-rate balance)
+                       )
+                )
+            )
+    )
     
 "defthing" creates a function that returns a lambda body.
 This lambda body holds a case statement which, when called
@@ -95,7 +107,7 @@ some code or return a value). For example, from the above
 defthing, the following function is generated:
 
     (defun account (&key (name) (balance 0) (interest-rate .05))
-     (lambda (#:message2822)
+     (lambda (#:message2822) ;variable used to avoid name clashes
       (case #:message2822
        (withdraw
         (lambda (amt) (decf balance amt)))
@@ -148,7 +160,12 @@ and "datas-as-case" is missing... till you write it.
        (lambda (,message)
          (case ,message
            ,@(methods-as-case does)
-           ,@(datas-as-case (mapcar #'car has)))))))
+           ,@(datas-as-case (mapcar #'car has))
+         )
+       )
+    )
+  )
+)
 
 #|
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -164,29 +181,57 @@ TODO 1c. Implement "data-as-case":
      (BALANCE (LAMBDA NIL BALANCE)) 
      (INTEREST-RATE (LAMBDA NIL INTEREST-RATE)))
     
+|#
+(defun datas-as-case (d)
+  (case (car d)
+    (name (lambda nil name))
+    (balance (lambda nil balance))
+    (interest-rate (lambda nil interest-rate))
+  )
+)
+#|
 TODO 1d. Implement  "methods-as-case"
 
      (methods-as-case '((more (x) (+ x 1)) (less (x) (- x 1))))
      ==>
      ((MORE (LAMBDA (X) (+ X 1))) 
       (LESS (LAMBDA (X) (- X 1))))
-     
-
+  
+|#
+(defun methods-as-case (m)
+  (case (car m)
+    (more (lambda (x) (+ x 1)))
+    (less (lambda (x) (- x 1)))
+  )
+)
+#|
 Now that that is working, the following should
 expand nicely:
 |#
 
+
+
 ; but first, uncomment this code
-'(defthing
+(defthing
   account
   :has  ((name) (balance 0) (interest-rate .05))
-  :does ((withdraw (amt)
-                     (decf balance amt))
-         (deposit (amt)
-                  (incf balance amt))
-         (interest ()
-                   (incf balance
-                         (* interest-rate balance)))))
+  :does (
+           (withdraw (amt)
+              (if (> balance amt)
+                 (decf balance amt)
+                 (print 'insufficient-funds)
+              )
+           )
+           (deposit (amt)
+              (incf balance amt)
+           )
+           (interest ()
+              (incf balance
+                 (* interest-rate balance)
+              )
+           )
+        )
+)
 
 #|
 
@@ -194,7 +239,7 @@ TODO 1e. Show the result of expanding you account.
 |#
 
 ; uncomment this to see what an account looks like
-'(xpand (account))
+(xpand (account)) ;TODO: IDK if the output of this looks good
 
 #|
 1f. Fix "withdraw" in "account" such that if you withdraw more than
@@ -209,15 +254,19 @@ TODO 1f.. Show the output from the following function
       (print `(encapsulaton 
                   ,(send acc 'interest)
                   ,(send acc 'interest)
-                  ,(send acc 'balance)))
+                  ,(send acc 'balance)
+               )
+               )
+      
       (dotimes (i 10)
          (print `(encapsulation 
                     ,(send acc 'withdraw 20))))
+             
       ))
 
 
 ; to run encapuatlion, uncomment the following
-'(encapsulation)
+(encapsulation)
 
 #|
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -275,12 +324,12 @@ well as telling the object what kind of thing it is (see "_ako!").
 This new "defklass" macro returns:
 
      `(defun ,klass (&key ,@has) 
-            (let ((,self (lambda (,message)
+            (let ((,self (lambda (,message) ;finds the location of self (the created object)
                            (case ,message
                              ,@(methods-as-case does)
                              ,@(datas-as-case (mapcar #'car has))))))
-              (send ,self '_self! ,self)
-              (send ,self '_isa! ',klass)
+              (send ,self '_self! ,self) ;giving self a pointer to itself (_self contains a pointer to the created object)
+              (send ,self '_isa! ',klass) ; (_isa points to the type)
               ,self))))
 
 The key thing about defklass is that, before it returns anything,
