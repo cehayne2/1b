@@ -184,12 +184,11 @@ TODO 1c. Implement "data-as-case":
      (INTEREST-RATE (LAMBDA NIL INTEREST-RATE)))
     
 |#
-(defun datas-as-case (d)
-  (case (car d)
-    (name (lambda nil name))
-    (balance (lambda nil balance))
-    (interest-rate (lambda nil interest-rate))
-  )
+(defun datum-as-case (datum)
+   `(,datum (lambda nil ,datum)))
+
+(defun datas-as-case (data)
+  (mapcar #'datum-as-case data)
 )
 #|
 TODO 1d. Implement  "methods-as-case"
