@@ -184,11 +184,12 @@ TODO 1c. Implement "data-as-case":
      (INTEREST-RATE (LAMBDA NIL INTEREST-RATE)))
     
 |#
+
 (defun datum-as-case (datum)
-   `(,datum (lambda nil ,datum)))
+  `(,datum (lambda nil ,datum)))
 
 (defun datas-as-case (data)
-  (mapcar #'datum-as-case data)
+   (mapcar #'datum-as-case data)
 )
 #|
 TODO 1d. Implement  "methods-as-case"
@@ -199,11 +200,11 @@ TODO 1d. Implement  "methods-as-case"
       (LESS (LAMBDA (X) (- X 1))))
   
 |#
-(defun methods-as-case (m)
-  (case (car m)
-    (more (lambda (x) (+ x 1)))
-    (less (lambda (x) (- x 1)))
-  )
+(defun method-as-case (method)
+  `(,(car method) (lambda ,(cadr method) ,@(cddr method)))
+)
+(defun methods-as-case (methods)
+   (mapcar #'method-as-case methods)
 )
 #|
 Now that that is working, the following should
@@ -218,10 +219,7 @@ expand nicely:
   :has  ((name) (balance 0) (interest-rate .05))
   :does (
            (withdraw (amt)
-              (if (> balance amt)
-                 (decf balance amt)
-                 (print 'insufficient-funds)
-              )
+              (decf balance amt)
            )
            (deposit (amt)
               (incf balance amt)
@@ -240,13 +238,15 @@ TODO 1e. Show the result of expanding you account.
 |#
 
 ; uncomment this to see what an account looks like
-(xpand (account)) ;TODO: IDK if the output of this looks good
+(xpand (account))
 
 #|
 1f. Fix "withdraw" in "account" such that if you withdraw more than
 what is there, it  returns the symbol 'insufficient-funds
  
 TODO 1f.. Show the output from the following function
+
+;In accordance with the professor's instructions, I am ignoring 1f.
 
 |#
 
@@ -257,7 +257,7 @@ TODO 1f.. Show the output from the following function
                   ,(send acc 'interest)
                   ,(send acc 'balance)
                )
-               )
+      )
       
       (dotimes (i 10)
          (print `(encapsulation 
