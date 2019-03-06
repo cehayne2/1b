@@ -278,12 +278,48 @@ TODO 2a. Define an object "cirle" with variables x,y
     (to hold the size of the circle). Add a method 
     "area" that returns 2 *pi*radius^2
 
+(defclass circle () 
+	((x 
+		:initarg :x 
+		:accessor x) 
+	(y 
+		:initarg :y 
+		:accessor y) 
+	(radius
+		:initarg :radius
+		:accessor radius)
+	(deffun area()
+		(* (* 2 3.141592) (* radius radius) )
+))
+
 ; run this to peek inside circle
 '(xpand (circle))
 
 TODO 2b. Define an object "rectangle" with variables x1,x2,y1,y2
     that all default value of 0. Add
     a method "area" that returns the area of that rectangle
+
+(defclass rectangle ()
+    ((x1
+        :initarg :x1
+        :initform 0
+        :accessor x1)
+    (x2
+        :initarg :x2
+        :initform 0
+        :accessor x2)
+    (y1
+        :initarg :y1
+        :initform 0
+        :accessor y1)
+    (y2
+        :initarg :y2
+        :initform 0
+        :accessor y2)
+    (deffun area()
+       (* (- x1 x2) (- y1 y2) )
+))
+
 TODO 2c. Show the output from the following test
 
 |#
