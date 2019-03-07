@@ -238,7 +238,7 @@ TODO 1e. Show the result of expanding you account.
 |#
 
 ; uncomment this to see what an account looks like
-(xpand (account))
+'(xpand (account))
 
 #|
 1f. Fix "withdraw" in "account" such that if you withdraw more than
@@ -400,6 +400,39 @@ object
 |#
 
 ; implement defklass here
+(defmacro defklass (klass &key isa has does)
+  (let* (
+         (message (gensym "MESSAGE"))
+         (self (gensym "SELF"))
+         (b4          (and isa (gethash isa *meta*)))
+         (has-before  (and b4 (about-has b4)))
+         (does-before (and b4 (about-does b4)))
+         )
+        
+    ;append parents has and does
+    (setq has (append has has-before))
+    (setq does (append does does-before))
+    (setf (gethash klass *meta*)
+       (make-about :has has :does does)
+    )
+    
+        
+    `(defun ,klass (&key ,@has)
+        (let 
+           ((,self (lambda (,message) ;finds the location of self (the created object)
+                           (case ,message
+                             ,@(methods-as-case does)
+                             ,@(datas-as-case (mapcar #'car has))))
+           ))
+           (send ,self '_self! ,self) ;giving self a pointer to itself (_self contains a pointer to the created object)
+           (send ,self '_isa! ',klass) ; (_isa points to the type)
+           ,self
+        )
+     )
+  )
+)
+
+;-------------------
 
 (let ((_counter 0))
   (defun counter () (incf _counter)))
