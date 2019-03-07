@@ -487,4 +487,4 @@ object
       (print `(meta ,(send acc 'show))
    )))
 
-'(meta)
+(meta)
