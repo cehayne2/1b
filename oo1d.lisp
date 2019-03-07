@@ -280,10 +280,10 @@ TODO 2a. Define an object "cirle" with variables x,y
 |#
 (defthing 
    circle
-      has: ((x) (y) (radius))  
-      does: (
+      :has ((x) (y) (radius))  
+      :does (
          (area()
-            (* (* 2 3.141592) (* radius radius) ))
+            (* 2 3.141592 radius radius) )
       )
 )
 #|
@@ -295,8 +295,8 @@ TODO 2b. Define an object "rectangle" with variables x1,x2,y1,y2
     a method "area" that returns the area of that rectangle
 |#
 (defthing rectangle ()
-   has: ((x1 0) (x2 0) (y1 0) (y2 0))
-   does: (
+   :has ((x1 0) (x2 0) (y1 0) (y2 0))
+   :does (
       (area ()
          (* (- x1 x2) (- y1 y2) ) )
    )
