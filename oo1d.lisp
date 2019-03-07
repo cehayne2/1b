@@ -294,7 +294,7 @@ TODO 2b. Define an object "rectangle" with variables x1,x2,y1,y2
     that all default value of 0. Add
     a method "area" that returns the area of that rectangle
 |#
-(defthing rectangle ()
+(defthing rectangle
    :has ((x1 0) (x2 0) (y1 0) (y2 0))
    :does (
       (area ()
@@ -426,7 +426,7 @@ object
 
 ; uncomment the following when defklass is implemented
 
-'(defklass 
+(defklass 
   object 
   :has ((_self)  (_isa) (id (counter)))
   :does (
@@ -441,7 +441,7 @@ object
                                 slot-values)))))))
 
 ; uncomment the following when defklass is implemented
-'(defklass
+(defklass
   account
   :isa object
   :has  ((name) (balance 0) (interest-rate .05))
@@ -457,7 +457,7 @@ object
 '(xpand (account))
 
 ; uncomment the following when defklass is implemented
-'(defklass
+(defklass
   trimmed-account
   :isa account
   :does ((withdraw (amt)
@@ -477,7 +477,7 @@ object
 
 ; TODO: 3a show that the following works correctly
 
-'(inheritance)
+(inheritance)
 
 '(xpand (trimmed-account))
 ; TODO: 3b. show that the following prints out the slots of an object.
