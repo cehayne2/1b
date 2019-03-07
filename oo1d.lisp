@@ -277,30 +277,31 @@ TODO 2a. Define an object "cirle" with variables x,y
     (for  the center of the circle) and radius 
     (to hold the size of the circle). Add a method 
     "area" that returns 2 *pi*radius^2
-
+|#
 (defthing 
-	circle
-	has: ((x) (y) (radius))  
-	does: (
-		(area()
-			(* (* 2 3.141592) (* radius radius) ))
-	)
+   circle
+      has: ((x) (y) (radius))  
+      does: (
+         (area()
+            (* (* 2 3.141592) (* radius radius) ))
+      )
 )
-
+#|
 ; run this to peek inside circle
 '(xpand (circle))
 
 TODO 2b. Define an object "rectangle" with variables x1,x2,y1,y2
     that all default value of 0. Add
     a method "area" that returns the area of that rectangle
-
+|#
 (defthing rectangle ()
-	has: ((x1) (x2) (y1) (y2))
-	does: (
-		(area ()
-			(* (- x1 x2) (- y1 y2) ) )
-	)
+   has: ((x1 0) (x2 0) (y1 0) (y2 0))
+   does: (
+      (area ()
+         (* (- x1 x2) (- y1 y2) ) )
+   )
 )
+#|
 
 TODO 2c. Show the output from the following test
 
